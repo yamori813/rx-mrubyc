@@ -1,0 +1,4 @@
+*.o
+*.elf
+*.mot
+sample_serial_echo_server.c

@@ -52,18 +52,6 @@ static void c_sci5_write(mrb_vm * vm, mrb_value * v)
 	SCI1.TDR = ch;
 }
 
-debug()
-{
-	uint8_t ch = 0x55;
-
-	while (ICU.IR[IR_SCI1_TXI1].BIT.IR == 0)
-	{
-		;
-	}
-	ICU.IR[IR_SCI1_TXI1].BIT.IR = 0;
-	SCI1.TDR = ch;
-}
-
 int hal_write(int fd, const void * buf, int nbytes)
 {
 	return 0;
