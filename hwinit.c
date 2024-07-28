@@ -121,6 +121,8 @@ void InitTimer( void )
 void
 HardwareSetup (void)
 {
+  R_INIT_Clock();
+  SCI_Init();
 /*
  BSC.CS0MOD.WORD = 0x1234;
  BSC.CS7CNT.WORD = 0x5678;

@@ -55,7 +55,8 @@ extern "C" {
 # define hal_init()        ((void)0)
 # define hal_enable_irq()  ((void)0)
 # define hal_disable_irq() ((void)0)
-# define hal_idle_cpu()    (R_BSP_SoftwareDelay(MRBC_TICK_UNIT, BSP_DELAY_MILLISECS), mrbc_tick())
+//# define hal_idle_cpu()    (R_BSP_SoftwareDelay(MRBC_TICK_UNIT, BSP_DELAY_MILLISECS), mrbc_tick())
+# define hal_idle_cpu()    ((void)0)
 
 #endif
 
