@@ -41,7 +41,7 @@ start.o: start.S
 	$(CROSS_CC) $(ASDEF) -c start.S
 
 hoge.c: $(RBSCRIPT)
-	../armbm-mruby/mruby/build/host/bin/mrbc -Bhoge -ohoge.c $(RBSCRIPT)
+	mrbc -Bhoge -ohoge.c $(RBSCRIPT)
 
 clean:
 	rm -rf *.o *.elf *.mot hoge.c
