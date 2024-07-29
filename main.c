@@ -14,7 +14,7 @@
 #define MEMORY_SIZE (1024*10)
 static char memory_pool[MEMORY_SIZE];
 
-extern const uint8_t sample_serial_echo_server[];
+extern const uint8_t hoge[];
 
 static void c_sci5_init (mrb_vm * vm, mrb_value * v);
 static void c_sci5_read (mrb_vm * vm, mrb_value * v);
@@ -76,7 +76,7 @@ int main (void)
 	mrbc_define_method(0, mrbc_class_object, "serial_write",
 	    (mrbc_func_t)c_sci5_write);
 
-	if (NULL == mrbc_create_task(sample_serial_echo_server, 0))
+	if (NULL == mrbc_create_task(hoge, 0))
 	{
 		while(1);
 	}
