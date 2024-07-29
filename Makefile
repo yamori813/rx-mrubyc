@@ -26,6 +26,7 @@ CROSS_CFLAGS += -DMRBC_NO_TIMER
 
 main.mot:	main.elf
 	$(CROSS_OBJCOPY) main.elf -O srec -I elf32-rx-be-ns $@
+	@cksum -o 3 $@ | awk '{printf "CRC-32 : %X\n", $$1}'
 
 main.elf:	$(OBJS) $(MRBCOBJ) sample_serial_echo_server.c
 	$(CROSS_CC) $(CROSS_LIBS) $(CROSS_LDFLAGS) -o $@ $(OBJS) $(MRBCOBJ)
