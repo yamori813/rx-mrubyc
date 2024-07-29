@@ -87,11 +87,11 @@ SECTIONS
 	{
 		_ustack = .;
 	} > RAM
-	.istack 0x100: AT(0x100)
+	.istack 0x400: AT(0x100)
 	{
 		_istack = .;
 	} > RAM
-	.data 0x204: AT(_mdata)
+	.data 0x404: AT(_mdata)
 	{
 		_data = .;
 		*(.data)

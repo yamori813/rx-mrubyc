@@ -8,8 +8,6 @@
 
 #include "iodefine.h"
 
-int     g_cnt = 0;
-
 // Exception(Supervisor Instruction)
 void Excep_SuperVisorInst(void) {  }
 
@@ -39,13 +37,7 @@ void Excep_ICU_SWINT(void) {  }
 
 // CMT0 CMI0
 void Excep_CMT0_CMI0(void) {
-    g_cnt++;
-
-    if (g_cnt >= 1000)
-    {
-        PORTB.PODR.BIT.B0 ^= 1;
-        g_cnt = 0;
-    }
+    mrbc_tick();
 }
 
 // CMT1 CMI1

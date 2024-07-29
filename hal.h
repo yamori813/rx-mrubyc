@@ -1,8 +1,7 @@
-
 /*! @file
   @brief
   Hardware abstraction layer
-        for CK-RX65N
+        for AE-RX210
 
   <pre>
   Copyright (C) 2016 Kyushu Institute of Technology.
@@ -46,17 +45,16 @@ extern "C" {
 #endif
 
 #ifndef MRBC_NO_TIMER
-# define hal_init()        ((void)0)
-# define hal_enable_irq()  ((void)0)
-# define hal_disable_irq() ((void)0)
-# define hal_idle_cpu()    ((void)0)
+#define hal_init()		((void)0)
+#define hal_enable_irq()	(__builtin_rx_clrpsw('I'))
+#define hal_disable_irq()	(__builtin_rx_setpsw('I'))
+#define hal_idle_cpu()		(__builtin_rx_wait())
 
 #else // MRBC_NO_TIMER
-# define hal_init()        ((void)0)
-# define hal_enable_irq()  ((void)0)
-# define hal_disable_irq() ((void)0)
-//# define hal_idle_cpu()    (R_BSP_SoftwareDelay(MRBC_TICK_UNIT, BSP_DELAY_MILLISECS), mrbc_tick())
-# define hal_idle_cpu()    ((void)0)
+#define hal_init()		((void)0)
+#define hal_enable_irq()	((void)0)
+#define hal_disable_irq()	((void)0)
+#define hal_idle_cpu()		((void)0)
 
 #endif
 

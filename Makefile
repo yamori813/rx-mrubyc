@@ -22,11 +22,11 @@ OBJS += start.o hwinit.o inthandler.o vects.o
 MRBCOBJ = alloc.o c_array.o c_hash.o c_math.o c_numeric.o c_object.o c_range.o c_string.o class.o console.o error.o global.o keyvalue.o load.o mrblib.o rrt0.o symbol.o value.o vm.o
 MRBCOBJ += sample_serial_echo_server.o
 CROSS_CFLAGS += -std=c99 -I. -Imrubyc/src
-CROSS_CFLAGS += -DMRBC_NO_TIMER
+#CROSS_CFLAGS += -DMRBC_NO_TIMER
 
 main.mot:	main.elf
 	$(CROSS_OBJCOPY) main.elf -O srec -I elf32-rx-be-ns $@
-	@cksum -o 3 $@ | awk '{printf "CRC-32 : %X\n", $$1}'
+	@cksum -o 3 $@ | awk '{printf "CRC-32 : %08X\n", $$1}'
 
 main.elf:	$(OBJS) $(MRBCOBJ) sample_serial_echo_server.c
 	$(CROSS_CC) $(CROSS_LIBS) $(CROSS_LDFLAGS) -o $@ $(OBJS) $(MRBCOBJ)
