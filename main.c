@@ -22,6 +22,7 @@ static void c_sci5_write (mrb_vm * vm, mrb_value * v);
 
 static void c_sci5_init (mrb_vm * vm, mrb_value * v)
 {
+	SCI_Init();
 }
 
 static void c_sci5_read(mrb_vm * vm, mrb_value * v)
