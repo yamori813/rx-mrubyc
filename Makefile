@@ -1,5 +1,5 @@
 #
-# BSD makefile for rx-mruby
+# BSD makefile for rx-mrubyc
 #
 
 PREFIX = rx-elf
