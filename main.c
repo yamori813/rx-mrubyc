@@ -11,6 +11,8 @@
 #include "iodefine.h"
 #include "mrubyc.h"
 
+#include "xprintf.h"
+
 #define MEMORY_SIZE (1024*10)
 static char memory_pool[MEMORY_SIZE];
 
@@ -22,7 +24,6 @@ static void c_sci5_write (mrb_vm * vm, mrb_value * v);
 
 static void c_sci5_init (mrb_vm * vm, mrb_value * v)
 {
-	SCI_Init();
 }
 
 static void c_sci5_read(mrb_vm * vm, mrb_value * v)
@@ -41,16 +42,22 @@ static void c_sci5_read(mrb_vm * vm, mrb_value * v)
 	SET_INT_RETURN(ch);
 }
 
-static void c_sci5_write(mrb_vm * vm, mrb_value * v)
+void pchar(unsigned char);
+void pchar(unsigned char ch)
 {
-	uint8_t ch = GET_INT_ARG(1);
-
 	while (ICU.IR[IR_SCI1_TXI1].BIT.IR == 0)
 	{
 		;
 	}
 	ICU.IR[IR_SCI1_TXI1].BIT.IR = 0;
 	SCI1.TDR = ch;
+}
+
+static void c_sci5_write(mrb_vm * vm, mrb_value * v)
+{
+	uint8_t ch = GET_INT_ARG(1);
+
+	pchar(ch);
 }
 
 int hal_write(int fd, const void * buf, int nbytes)
@@ -69,6 +76,10 @@ int hal_flush(int fd)
  */
 int main (void)
 {
+	xfunc_out=pchar;
+
+	xprintf("start\r\n");
+
 	mrbc_init(memory_pool, MEMORY_SIZE);
 	mrbc_define_method(0, mrbc_class_object, "serial_init",
 	    (mrbc_func_t)c_sci5_init);

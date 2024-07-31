@@ -15,7 +15,7 @@ CROSS_LIBS = -lc -lgcc
 CROSS_CFLAGS = -O2 -ffunction-sections -fdata-sections -Wstack-usage=200 -mcpu=rx200 -misa=v1 -mlittle-endian-data -nofpu
 CROSS_LDFLAGS = -T linker_script.ld -nostartfiles
 
-OBJS = main.o
+OBJS = main.o xprintf.o
 OBJS += r_init_clock.o sci.o
 OBJS += start.o hwinit.o inthandler.o vects.o
 OBJS += hoge.o

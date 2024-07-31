@@ -44,6 +44,7 @@ HardwareSetup (void)
 {
   R_INIT_Clock();
 
+  SCI_Init();
 #ifndef MRBC_NO_TIMER
   InitTimer();
 #endif
