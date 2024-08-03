@@ -8,6 +8,8 @@
 
 #include "iodefine.h"
 
+static volatile unsigned int jiffies = 0;
+
 // Exception(Supervisor Instruction)
 void Excep_SuperVisorInst(void) {  }
 
@@ -37,6 +39,7 @@ void Excep_ICU_SWINT(void) {  }
 
 // CMT0 CMI0
 void Excep_CMT0_CMI0(void) {
+    ++jiffies;
     mrbc_tick();
 }
 
@@ -534,3 +537,12 @@ void Excep_SCI11_TXI11(void) {  }
 // SCI11 TEI11
 void Excep_SCI11_TEI11(void) {  }
 
+delay_ms(int msec)
+{
+int start;
+
+	start = jiffies;
+
+	while (jiffies < start + msec)
+		;
+}
