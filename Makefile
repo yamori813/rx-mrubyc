@@ -23,13 +23,11 @@ MRBCOBJ = alloc.o c_array.o c_hash.o c_math.o c_numeric.o c_object.o c_range.o c
 CROSS_CFLAGS += -std=c99 -I. -Imrubyc/src
 #CROSS_CFLAGS += -DMRBC_NO_TIMER
 
-RBSCRIPT = sample_serial_echo_server.rb
-
 main.mot:	main.elf
 	$(CROSS_OBJCOPY) main.elf -O srec -I elf32-rx-be-ns $@
 	@cksum -o 3 $@ | awk '{printf "CRC-32 : %08X\n", $$1}'
 
-main.elf:	$(OBJS) $(MRBCOBJ) hoge.c
+main.elf:	$(OBJS) $(MRBCOBJ)
 	$(CROSS_CC) $(CROSS_LIBS) $(CROSS_LDFLAGS) -o $@ $(OBJS) $(MRBCOBJ)
 	$(CROSS_SIZE) $@
 
@@ -39,11 +37,8 @@ main.elf:	$(OBJS) $(MRBCOBJ) hoge.c
 start.o: start.S
 	$(CROSS_CC) $(ASDEF) -c start.S
 
-hoge.c: $(RBSCRIPT)
-	mrbc -Bhoge -ohoge.c $(RBSCRIPT)
-
 clean:
-	rm -rf *.o *.elf *.mot hoge.c
+	rm -rf *.o *.elf *.mot
 
 alloc.o : mrubyc/src/alloc.c
 c_array.o : mrubyc/src/c_array.c
