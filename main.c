@@ -141,6 +141,8 @@ int i, block;
 
 	xprintf("xmodem start after 10 secs\r\n", block);
 
+	EraseE2Flash(E2_BASE_ADDR, 128 * 64);
+
 	delay_ms(10000);
 	pchar(XMODEM_NAK);
 
