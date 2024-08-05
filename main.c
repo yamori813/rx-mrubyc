@@ -9,6 +9,8 @@
  *
  */
 #include "iodefine.h"
+#include "r_typedefs.h"
+#include "e2flashdef.h"
 #include "mrubyc.h"
 
 #include "xprintf.h"
