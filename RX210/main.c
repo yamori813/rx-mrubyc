@@ -15,8 +15,6 @@
 
 #include "xprintf.h"
 
-#define E2_BASE_ADDR	(0x00100000)
-
 int statcon()
 {
 	if(SCI1.SSR.BYTE & 0x38)
