@@ -17,7 +17,8 @@ CROSS_CFLAGS += -DRELEASE -DGRCITRUS
 CROSS_CFLAGS += -I../common
 CROSS_LDFLAGS = -T linker_script.ld -nostartfiles
 
-OBJS = main.o xprintf.o
+OBJS = main.o
+OBJS += xprintf.o monitor.o e2flash.o
 OBJS += start.o hwinit.o inthandler.o vects.o
 OBJS += usb_core.o usb_hal.o usb_cdc.o usbdescriptors.o util.o
 
@@ -63,3 +64,5 @@ value.o : ../mrubyc/src/value.c
 vm.o : ../mrubyc/src/vm.c
 
 xprintf.o : ../common/xprintf.c
+monitor.o : ../common/monitor.c
+e2flash.o : ../common/e2flash.c

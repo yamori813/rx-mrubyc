@@ -26,7 +26,8 @@
 
 //#include "Types.h"
 #include "iodefine.h"
-#include "typedefine.h"
+//#include "typedefine.h"
+#include "r_typedefs.h"
 
 #ifdef __cplusplus
 extern "C" {

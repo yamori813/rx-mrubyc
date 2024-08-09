@@ -16,8 +16,9 @@ CROSS_CFLAGS = -O2 -ffunction-sections -fdata-sections -Wstack-usage=200 -mcpu=r
 CROSS_CFLAGS += -I../common
 CROSS_LDFLAGS = -T linker_script.ld -nostartfiles
 
-OBJS = main.o xprintf.o
-OBJS += r_init_clock.o sci.o e2flash.o
+OBJS = main.o
+OBJS += xprintf.o e2flash.o
+OBJS += r_init_clock.o sci.o
 OBJS += start.o hwinit.o inthandler.o vects.o
 
 MRBCOBJ = alloc.o c_array.o c_hash.o c_math.o c_numeric.o c_object.o c_range.o c_string.o class.o console.o error.o global.o keyvalue.o load.o mrblib.o rrt0.o symbol.o value.o vm.o
@@ -62,3 +63,4 @@ value.o : ../mrubyc/src/value.c
 vm.o : ../mrubyc/src/vm.c
 
 xprintf.o : ../common/xprintf.c
+e2flash.o : ../common/e2flash.c

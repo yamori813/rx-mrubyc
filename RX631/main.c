@@ -19,6 +19,10 @@
 
 #define	SZ 256
 
+// dummy
+delay_ms()
+{}
+
 int hal_write(int fd, const void * buf, int nbytes)
 {
 	return 0;
@@ -44,11 +48,11 @@ void pchar(unsigned char ch)
 	USBCDC_PutChar(ch);
 }
 
-static void c_cdc_init (mrb_vm * vm, mrb_value * v)
+void c_sci5_init (mrb_vm * vm, mrb_value * v)
 {
 }
 
-static void c_cdc_read(mrb_vm * vm, mrb_value * v)
+void c_sci5_read(mrb_vm * vm, mrb_value * v)
 {
 	uint8_t ch;
 
@@ -56,45 +60,15 @@ static void c_cdc_read(mrb_vm * vm, mrb_value * v)
 	SET_INT_RETURN(ch);
 }
 
-static void c_cdc_write(mrb_vm * vm, mrb_value * v)
+void c_sci5_write(mrb_vm * vm, mrb_value * v)
 {
 	uint8_t ch = GET_INT_ARG(1);
 
 	pchar(ch);
 }
 
-/********************************************************************
- *
- ********************************************************************
- */
-void usbWrite(int size,unsigned char *buf)
-{
-	int sz;
-	while(size>0) {
-		sz = size;
-		if(sz>63) sz=63;
-		USBCDC_Write(sz,buf);
-		buf  += sz;
-		size -= sz;
-	}
-}
-/********************************************************************
- *
- ********************************************************************
- */
-
-void	loop(void)
-{
-	unsigned char  		  buf[SZ]; 
-	unsigned long size;
-	while(1) {
-		size=0;
-		USBCDC_Read(SZ,buf,&size);
-		usbWrite(size,buf);
-	}
-}
-
 int main(void) {
+unsigned char ch;
 
 	USBCDC_Init();
 
@@ -102,12 +76,29 @@ int main(void) {
 
 	xfunc_out=pchar;
 
-	xprintf("start\r\n");
+	// dorp 2 byte ?
+	xprintf("  start\r\n");
 
 	PORTA.PDR.BIT.B0 = 1;
 	PORTA.PODR.BIT.B0 = 1;
 
-	loop();
+
+	R_FlashDataAreaAccess (0xFFFF, 0xFFFF);
+	flash_init();
+
+	for(;;) {
+		ch = gchar();
+		switch(ch) {
+			case 'x':
+				xrec();
+				break;
+			case 'r':
+				runmrbc();
+				break;
+			default:
+				break;
+		}
+	}
 
 return 0;
 }
