@@ -15,6 +15,8 @@
 
 #include "mrubyc.h"
 
+#include "xprintf.h"
+
 #define	SZ 256
 
 int hal_write(int fd, const void * buf, int nbytes)
@@ -30,11 +32,8 @@ int hal_flush(int fd)
 int gchar()
 {
 	uint8_t ch;
-	int size;
 
-	do {
-		USBCDC_Read(1, &ch, &size);
-	} while (size == 0);
+	USBCDC_GetChar(&ch);
 
 	return(ch);
 }
@@ -42,7 +41,7 @@ int gchar()
 void pchar(unsigned char);
 void pchar(unsigned char ch)
 {
-	USBCDC_Write(1, &ch);
+	USBCDC_PutChar(ch);
 }
 
 static void c_cdc_init (mrb_vm * vm, mrb_value * v)
@@ -98,6 +97,12 @@ void	loop(void)
 int main(void) {
 
 	USBCDC_Init();
+
+	while(false == USBCDC_IsConnected()) ;
+
+	xfunc_out=pchar;
+
+	xprintf("start\r\n");
 
 	PORTA.PDR.BIT.B0 = 1;
 	PORTA.PODR.BIT.B0 = 1;

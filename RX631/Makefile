@@ -8,14 +8,16 @@ CROSS_CC = $(PREFIX)-gcc
 CROSS_AS = $(PREFIX)-as
 CROSS_LD = $(PREFIX)-ld
 CROSS_OBJCOPY = $(PREFIX)-objcopy
+CROSS_SIZE = $(PREFIX)-size
 
 CROSS_LIBS = -lc -lgcc
 
 CROSS_CFLAGS = -O2 -ffunction-sections -fdata-sections -mcpu=rx600 -misa=v1 -mlittle-endian-data -nofpu
 CROSS_CFLAGS += -DRELEASE -DGRCITRUS
+CROSS_CFLAGS += -I../common
 CROSS_LDFLAGS = -T linker_script.ld -nostartfiles
 
-OBJS = rx631.o
+OBJS = main.o xprintf.o
 OBJS += start.o hwinit.o inthandler.o vects.o
 OBJS += usb_core.o usb_hal.o usb_cdc.o usbdescriptors.o util.o
 
@@ -23,12 +25,13 @@ MRBCOBJ = alloc.o c_array.o c_hash.o c_math.o c_numeric.o c_object.o c_range.o c
 CROSS_CFLAGS += -std=c99 -I. -I../mrubyc/src
 CROSS_CFLAGS += -DMRBC_NO_TIMER
 
-rx631.mot:	rx631.elf
-	$(CROSS_OBJCOPY) rx631.elf -O srec -I elf32-rx-be-ns $@
+main.mot:	main.elf
+	$(CROSS_OBJCOPY) main.elf -O srec -I elf32-rx-be-ns $@
 	@cksum -o 3 $@ | awk '{printf "CRC-32 : %08X\n", $$1}'
 
-rx631.elf:	$(OBJS) $(MRBCOBJ)
+main.elf:	$(OBJS) $(MRBCOBJ)
 	$(CROSS_CC) $(CROSS_LIBS) $(CROSS_LDFLAGS) -o $@ $(OBJS) $(MRBCOBJ)
+	$(CROSS_SIZE) $@
 
 .c.o:
 	$(CROSS_CC) $(CROSS_CFLAGS) -c $<
@@ -58,3 +61,5 @@ rrt0.o : ../mrubyc/src/rrt0.c
 symbol.o : ../mrubyc/src/symbol.c
 value.o : ../mrubyc/src/value.c
 vm.o : ../mrubyc/src/vm.c
+
+xprintf.o : ../common/xprintf.c
