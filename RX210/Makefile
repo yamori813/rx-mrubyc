@@ -13,6 +13,7 @@ CROSS_SIZE = $(PREFIX)-size
 CROSS_LIBS = -lc -lgcc
 
 CROSS_CFLAGS = -O2 -ffunction-sections -fdata-sections -Wstack-usage=200 -mcpu=rx200 -misa=v1 -mlittle-endian-data -nofpu
+CROSS_CFLAGS += -I../common
 CROSS_LDFLAGS = -T linker_script.ld -nostartfiles
 
 OBJS = main.o xprintf.o
@@ -59,3 +60,5 @@ rrt0.o : ../mrubyc/src/rrt0.c
 symbol.o : ../mrubyc/src/symbol.c
 value.o : ../mrubyc/src/value.c
 vm.o : ../mrubyc/src/vm.c
+
+xprintf.o : ../common/xprintf.c

@@ -13,6 +13,8 @@
 #include "iodefine.h"
 #include "specific_instructions.h"
 
+#include "mrubyc.h"
+
 #define	SZ 256
 
 int hal_write(int fd, const void * buf, int nbytes)
@@ -23,6 +25,43 @@ int hal_write(int fd, const void * buf, int nbytes)
 int hal_flush(int fd)
 {
 	return 0;
+}
+
+int gchar()
+{
+	uint8_t ch;
+	int size;
+
+	do {
+		USBCDC_Read(1, &ch, &size);
+	} while (size == 0);
+
+	return(ch);
+}
+
+void pchar(unsigned char);
+void pchar(unsigned char ch)
+{
+	USBCDC_Write(1, &ch);
+}
+
+static void c_cdc_init (mrb_vm * vm, mrb_value * v)
+{
+}
+
+static void c_cdc_read(mrb_vm * vm, mrb_value * v)
+{
+	uint8_t ch;
+
+	ch = gchar();
+	SET_INT_RETURN(ch);
+}
+
+static void c_cdc_write(mrb_vm * vm, mrb_value * v)
+{
+	uint8_t ch = GET_INT_ARG(1);
+
+	pchar(ch);
 }
 
 /********************************************************************
