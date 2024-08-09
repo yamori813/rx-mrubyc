@@ -1,13 +1,7 @@
-/**
- * @file main.c
- * @author nizuki926
- * @brief main program
- * @version 1.0
- * @date 2019-02-03
- *
- * @copyright Copyright (c) 2019, nizuki926 All rights reserved.
+/*
  *
  */
+
 #include "iodefine.h"
 #include "r_typedefs.h"
 #include "e2flashdef.h"
