@@ -17,7 +17,7 @@ CROSS_CFLAGS += -I../common
 CROSS_LDFLAGS = -T linker_script.ld -nostartfiles
 
 OBJS = main.o
-OBJS += xprintf.o e2flash.o
+OBJS += xprintf.o e2flash.o monitor.o
 OBJS += r_init_clock.o sci.o
 OBJS += start.o hwinit.o inthandler.o vects.o
 
@@ -64,3 +64,4 @@ vm.o : ../mrubyc/src/vm.c
 
 xprintf.o : ../common/xprintf.c
 e2flash.o : ../common/e2flash.c
+monitor.o : ../common/monitor.c
