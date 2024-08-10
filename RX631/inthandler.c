@@ -21,6 +21,8 @@
 #include "iodefine.h"
 #include "usb_hal.h"
 
+static volatile unsigned int jiffies = 0;
+
 void InterruptHandler_USBHost() __attribute__((weak));
 void InterruptHandler_USBHost() {}
 
@@ -66,7 +68,9 @@ void INT_Excep_ICU_SWINT(void){ }
  * MOD EK 09/09/13 : Moved to drivers/system_timer.cpp.
  */
 //// CMT0 CMI0
-//void INT_Excep_CMT0_CMI0(void){ }
+void INT_Excep_CMT0_CMI0(void){
+	++jiffies;
+ }
 
 // CMT1 CMI1
 void INT_Excep_CMT1_CMI1(void){ }
@@ -757,3 +761,13 @@ void INT_Excep_SCI12_TEI12(void){ }
 
 // IEB IEBINT
 void INT_Excep_IEB_IEBINT(void){ }
+
+delay_ms(int msec)
+{
+int start;
+
+	start = jiffies;
+
+	while (jiffies < start + msec)
+		;
+}

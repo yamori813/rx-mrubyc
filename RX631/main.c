@@ -19,10 +19,6 @@
 
 #define	SZ 256
 
-// dummy
-delay_ms()
-{}
-
 int hal_write(int fd, const void * buf, int nbytes)
 {
 	return 0;
@@ -75,6 +71,8 @@ unsigned char ch;
 	while(false == USBCDC_IsConnected()) ;
 
 	xfunc_out=pchar;
+
+	InitTimer();
 
 	// dorp 2 byte ?
 	xprintf("  start\r\n");

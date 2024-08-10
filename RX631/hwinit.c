@@ -4,6 +4,7 @@
 /************************************************************************/
 
 #include "iodefine.h"
+#include "util.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -11,6 +12,33 @@ extern void HardwareSetup(void);
 #ifdef __cplusplus
 }
 #endif
+
+#define PCLK  (48 * 1000 * 1000)
+#define TicksForMillis (PCLK / 8 / 1000)
+
+void InitTimer( void )
+{
+
+	startModule(MstpIdCMT0);
+
+	CMT.CMSTR0.BIT.STR0 = 0;
+
+	CMT0.CMCNT = 0;
+	CMT0.CMCOR = TicksForMillis - 1;
+
+	IPR(CMT0, CMI0) = 1;
+	IEN(CMT0, CMI0) = 1;
+	IR(CMT0, CMI0) = 0;
+
+	struct st_cmt0_cmcr cmcr;
+	cmcr.WORD = 0;
+	cmcr.BIT.CKS = 0b00;	// PCLK/8
+	cmcr.BIT.CMIE = 1;	// compare match interrupt enable
+	cmcr.BIT.b7 = 1;
+	CMT0.CMCR.WORD = cmcr.WORD;
+
+	CMT.CMSTR0.BIT.STR0 = 1;
+}
 
 void HardwareSetup(void)
 {
@@ -79,6 +107,7 @@ int i;
     // Disable the PFS register protect.
     MPC.PWPR.BIT.PFSWE = 1;
 #endif
+
 /*
  BSC.CS0MOD.WORD = 0x1234;
  BSC.CS7CNT.WORD = 0x5678;
