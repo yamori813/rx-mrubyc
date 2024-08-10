@@ -26,6 +26,29 @@ extern c_sci5_init();
 extern c_sci5_read();
 extern c_sci5_write();
 
+mon()
+{
+unsigned char ch;
+
+	R_FlashDataAreaAccess (0xFFFF, 0xFFFF);
+	flash_init();
+
+	for(;;) {
+		ch = gchar();
+		switch(ch) {
+			case 'x':
+				xrec();
+				break;
+			case 'r':
+				runmrbc();
+				break;
+			default:
+				break;
+		}
+	}
+
+}
+
 mrbcopy(unsigned short *src, unsigned short *dst, int size)
 {
 int i;
@@ -44,7 +67,11 @@ int i, block;
 
 	xprintf("xmodem start after 10 secs\r\n", block);
 
-	EraseE2Flash(E2_BASE_ADDR, 128 * 64);
+#if defined(GRCITRUS)
+	EraseE2Flash(E2_BASE_ADDR, 128 * 256);	// 32K
+#else
+	EraseE2Flash(E2_BASE_ADDR, 128 * 64);	// 8K
+#endif
 
 	delay_ms(10000);
 	pchar(XMODEM_NAK);

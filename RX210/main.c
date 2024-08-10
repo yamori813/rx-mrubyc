@@ -83,27 +83,12 @@ int hal_flush(int fd)
  */
 int main (void)
 {
-unsigned char ch;
 
 	xfunc_out=pchar;
 
 	xprintf("start\r\n");
 
-	R_FlashDataAreaAccess (0xFFFF, 0xFFFF);
-	flash_init();
+	mon();
 
-	for(;;) {
-		ch = gchar();
-		switch(ch) {
-			case 'x':
-				xrec();
-				break;
-			case 'r':
-				runmrbc();
-				break;
-			default:
-				break;
-		}
-	}
+	return 0;
 }
-
