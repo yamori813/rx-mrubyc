@@ -64,7 +64,6 @@ void c_sci5_write(mrb_vm * vm, mrb_value * v)
 }
 
 int main(void) {
-unsigned char ch;
 
 	USBCDC_Init();
 
@@ -80,23 +79,7 @@ unsigned char ch;
 	PORTA.PDR.BIT.B0 = 1;
 	PORTA.PODR.BIT.B0 = 1;
 
+	mon();
 
-	R_FlashDataAreaAccess (0xFFFF, 0xFFFF);
-	flash_init();
-
-	for(;;) {
-		ch = gchar();
-		switch(ch) {
-			case 'x':
-				xrec();
-				break;
-			case 'r':
-				runmrbc();
-				break;
-			default:
-				break;
-		}
-	}
-
-return 0;
+	return 0;
 }
