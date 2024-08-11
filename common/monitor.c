@@ -103,52 +103,43 @@ unsigned short *e2p;
 unsigned short ss;
 unsigned char ch;
 int i;
-int mrbsize, memsize;
+int mrbsize;
 unsigned char *mrbbuf;
-unsigned char hdrbuf[32];
 
 	e2p = E2_BASE_ADDR;
-	for (i = 0; i < 16; ++i) {
+	for (i = 0; i < 8; ++i) {
 		ch = *(e2p + i);
-		hdrbuf[i * 2] = ch;
 		xprintf("%02x ", ch);
 		ch = *(e2p + i) >> 8;
-		hdrbuf[i * 2 + 1] = ch;
 		xprintf("%02x ", ch);
 	}
 	xprintf("\r\n");
-	if (hdrbuf[0x0] == 0x52 && hdrbuf[0x1] == 0x49 &&
-	    hdrbuf[0x2] == 0x54 && hdrbuf[0x3] == 0x45) {
-		mrbsize = (hdrbuf[0x8] << 24) | (hdrbuf[0x9] << 16) |
-		    (hdrbuf[0xa] << 8) | hdrbuf[0xb];
+	ss = *(e2p + 4);
+	mrbsize = (ss & 0xff) << 24 | (ss >> 8) << 16;
+	ss = *(e2p + 5);
+	mrbsize += (ss & 0xff) << 8 | (ss >> 8);
+	mrbsize = ((mrbsize + 1) / 2) * 2;
+	xprintf("MRB SIZE %d\r\n", mrbsize);
 
-		mrbsize += (ss & 0xff) << 8 | (ss >> 8);
-		/* RX e2 flash is 2 bytes boundary */
-		memsize = ((mrbsize + 1) / 2) * 2;
-		xprintf("MRB SIZE %d\r\n", mrbsize);
+	mrbbuf = malloc(mrbsize);
 
-		mrbbuf = malloc(memsize);
+	mrbcopy(e2p, mrbbuf, mrbsize);
 
-		mrbcopy(e2p, mrbbuf, memsize);
+	mrbc_init(memory_pool, MEMORY_SIZE);
+	mrbc_define_method(0, mrbc_class_object, "serial_init",
+	    (mrbc_func_t)c_sci5_init);
+	mrbc_define_method(0, mrbc_class_object, "serial_read",
+	    (mrbc_func_t)c_sci5_read);
+	mrbc_define_method(0, mrbc_class_object, "serial_write",
+	    (mrbc_func_t)c_sci5_write);
 
-		mrbc_init(memory_pool, MEMORY_SIZE);
-		mrbc_define_method(0, mrbc_class_object, "serial_init",
-		    (mrbc_func_t)c_sci5_init);
-		mrbc_define_method(0, mrbc_class_object, "serial_read",
-		    (mrbc_func_t)c_sci5_read);
-		mrbc_define_method(0, mrbc_class_object, "serial_write",
-		    (mrbc_func_t)c_sci5_write);
-
-		if (NULL == mrbc_create_task(mrbbuf, 0))
-		{
-			while(1);
-		}
-
-		mrbc_run();
-	} else {
-		xprintf("can't find mrb code on flash\n");
+	if (NULL == mrbc_create_task(mrbbuf, 0))
+	{
+		while(1);
 	}
 
-	return;
+	mrbc_run();
+
+	return 0;
 }
 
