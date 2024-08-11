@@ -70,6 +70,9 @@ void INT_Excep_ICU_SWINT(void){ }
 //// CMT0 CMI0
 void INT_Excep_CMT0_CMI0(void){
 	++jiffies;
+#ifndef MRBC_NO_TIMER
+	mrbc_tick();
+#endif
  }
 
 // CMT1 CMI1
