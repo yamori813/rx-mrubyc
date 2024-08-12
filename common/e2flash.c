@@ -184,10 +184,11 @@ uint8_t flash_init (void)
 void R_FlashDataAreaAccess (uint16_t read_en_mask, uint16_t write_en_mask)
 {
     /* Used for making sure select bits are not set. */
-    uint16_t temp_mask = 0x00FF;
+    uint16_t temp_mask;
 
 //#if   defined(BSP_MCU_RX610)
     
+//    temp_mask = 0x00FF;
     /* Set Read access for the Data Flash blocks */
 //    FLASH.DFLRE.WORD = (uint16_t)(0x2D00 | (read_en_mask & 0x00FF));
 
@@ -197,8 +198,12 @@ void R_FlashDataAreaAccess (uint16_t read_en_mask, uint16_t write_en_mask)
 //#else
 
 //    #if BSP_DATA_FLASH_SIZE_BYTES == 8192
+#if defined(GRCITRUS)
+    temp_mask = 0x00FF;
+#else
     /* Mask off bits 4-7 to make sure they are 0. */
     temp_mask = 0x000F;
+#endif
 //    #endif
 
     /* Set Read access for the Data Flash blocks DB0-DB7 */
@@ -208,11 +213,13 @@ void R_FlashDataAreaAccess (uint16_t read_en_mask, uint16_t write_en_mask)
     FLASH.DFLWE0.WORD = (uint16_t)(0x1E00 |  (write_en_mask & temp_mask));
 
 //    #if BSP_DATA_FLASH_SIZE_BYTES > 16384
+#if defined(GRCITRUS)
     /* Set Read access for the Data Flash blocks DB8-DB15 */
-//    FLASH.DFLRE1.WORD = (uint16_t)(0xD200 | ((read_en_mask >> 8) & 0x00FF));
+    FLASH.DFLRE1.WORD = (uint16_t)(0xD200 | ((read_en_mask >> 8) & 0x00FF));
 
     /* Set Erase/Program access for the Data Flash blocks DB8-DB15 */
-//    FLASH.DFLWE1.WORD = (uint16_t)(0xE100 |  ((write_en_mask >> 8) & 0x00FF));
+    FLASH.DFLWE1.WORD = (uint16_t)(0xE100 |  ((write_en_mask >> 8) & 0x00FF));
+#endif
 //    #endif
     
 //#endif
@@ -249,9 +256,11 @@ int EraseE2Flash(int FlashAddr,int bytes)
 {
 uint32_t	faddr = (uint32_t)FlashAddr;
 	int ret;
+/* NOT USE
 	ret = CheckE2flashAddress(faddr,bytes);
 	if(ret)
 		return ret;
+*/
 	if(EnterPEmode(faddr))
 	{
 //		cprintf("\r\nEnterPEmode error");
@@ -262,21 +271,27 @@ uint32_t	faddr = (uint32_t)FlashAddr;
 	{
 			// 消去
 		ret = CMDE2FlashErase((uint8_t *)faddr);
-			// 正常か
-			if (ret == 0)
-			{
-				// アドレスUP
-				faddr += 0x80;
-				// 総数ブロックカウントダウン
-				bytes -= 0x80;
-			}
-			else{
-//				cprintf("\r\nCMDE2FlashErase ret=error");
-				break;
-			}
+		// 正常か
+		if (ret == 0) {
+#if defined(GRCITRUS)
+			// アドレスUP
+			faddr += 0x20;
+			// 総数ブロックカウントダウン
+			bytes -= 0x20;
+#else
+			// アドレスUP
+			faddr += 0x80;
+			// 総数ブロックカウントダウン
+			bytes -= 0x80;
+#endif
+		} else {
+//			cprintf("\r\nCMDE2FlashErase ret=error");
+			break;
+		}
 	}
-		// 読み出しモード
-		ExitPeMode(faddr);
+	// 読み出しモード
+	ExitPeMode(faddr);
+
 	return ret;
 }
 /*********************************************/

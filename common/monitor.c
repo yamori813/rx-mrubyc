@@ -62,18 +62,20 @@ xrec()
 unsigned char ch;
 unsigned char dat[128];
 int i, block;
+int res;
 
 	block = 0;
 
-	xprintf("xmodem start after 10 secs\r\n", block);
+	xprintf("xmodem start after 5 secs\r\n", block);
 
 #if defined(GRCITRUS)
-	EraseE2Flash(E2_BASE_ADDR, 128 * 256);	// 32K
+	res = EraseE2Flash(E2_BASE_ADDR, 32);	// 32K
 #else
-	EraseE2Flash(E2_BASE_ADDR, 128 * 64);	// 8K
+	res = EraseE2Flash(E2_BASE_ADDR, 128 * 64);	// 8K
 #endif
+	xprintf("erase %d\r\n", res);
 
-	delay_ms(10000);
+	delay_ms(5000);
 	pchar(XMODEM_NAK);
 
 	while(1) {
