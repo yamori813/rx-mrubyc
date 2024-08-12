@@ -531,7 +531,7 @@ volatile int32_t	timeout;
 uint8_t CMDE2FlashErase(volatile uint8_t *pErase)
 {
 volatile int32_t	wait_cnt;
-uint8_t				result = 0;
+uint8_t			result = 0;
 
 	// 消去開始
 	*pErase = 0x20;
@@ -547,8 +547,8 @@ uint8_t				result = 0;
 			// FCU リセット
 			FCUReset();
 			result = 1;
-        }
-    }
+		}
+	}
 
 	if (result == 0){
 		// エラー発生したか
@@ -558,7 +558,7 @@ uint8_t				result = 0;
 		}
  	}
 
-    return result;
+	return result;
 }
 
 /*****************************************/
@@ -578,25 +578,25 @@ uint8_t				ret = 0;
 	if(ret)
 		return ret;
 
-		// PEモードに移行
+	// PEモードに移行
 	EnterPEmode(dstaddr);
 //		fEnterPeMode(start_addr);
 
-		while(0 < bytes){
-			ret = WriteDataFlash(dstaddr,srcaddr);
-			// 正常か
-			if (ret == 0){
-				dstaddr += 2;
-				srcaddr += 2;
-				bytes -= 2;
-			}
-			else{
-				break;
-			}
+	while(0 < bytes){
+		ret = WriteDataFlash(dstaddr,srcaddr);
+		// 正常か
+		if (ret == 0){
+			dstaddr += 2;
+			srcaddr += 2;
+			bytes -= 2;
 		}
+		else{
+			break;
+		}
+	}
 
-		// 読み出しモードに移行
-		ExitPeMode((uint32_t)pFlashAddr);
+	// 読み出しモードに移行
+	ExitPeMode((uint32_t)pFlashAddr);
 
 	return ret;
 }
