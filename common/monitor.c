@@ -101,29 +101,35 @@ void runmrbc()
 {
 unsigned short *e2p;
 unsigned short ss;
-unsigned char ch;
+//unsigned char ch;
 int i;
-int mrbsize;
+int mrbsize, memsize;
 unsigned char *mrbbuf;
+unsigned char hdrbuf[16];
 
 	e2p = E2_BASE_ADDR;
 	for (i = 0; i < 8; ++i) {
-		ch = *(e2p + i);
-		xprintf("%02x ", ch);
-		ch = *(e2p + i) >> 8;
-		xprintf("%02x ", ch);
+		ss = *(e2p + i);
+		hdrbuf[i * 2] = ss & 0xff;
+//		xprintf("%02x ", ch);
+		hdrbuf[i * 2 + 1] = ss >> 8;
+//		xprintf("%02x ", ch);
 	}
-	xprintf("\r\n");
+//	xprintf("\r\n");
+/*
 	ss = *(e2p + 4);
 	mrbsize = (ss & 0xff) << 24 | (ss >> 8) << 16;
 	ss = *(e2p + 5);
 	mrbsize += (ss & 0xff) << 8 | (ss >> 8);
-	mrbsize = ((mrbsize + 1) / 2) * 2;
+*/
+	mrbsize = (hdrbuf[0x8] << 24) | (hdrbuf[0x9] << 16) |
+	    (hdrbuf[0xa] << 8) | hdrbuf[0xb];
+	memsize = ((mrbsize + 1) / 2) * 2;
 	xprintf("MRB SIZE %d\r\n", mrbsize);
 
-	mrbbuf = malloc(mrbsize);
+	mrbbuf = malloc(memsize);
 
-	mrbcopy(e2p, mrbbuf, mrbsize);
+	mrbcopy(e2p, mrbbuf, memsize);
 
 	mrbc_init(memory_pool, MEMORY_SIZE);
 	mrbc_define_method(0, mrbc_class_object, "serial_init",
