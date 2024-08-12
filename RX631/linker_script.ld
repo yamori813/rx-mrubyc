@@ -83,11 +83,11 @@ SECTIONS
 		. = ALIGN(2);
 		_mdata = .;
 	} > ROM
-	.istack 0x8000 : AT (0x8000)
+	.istack 0x40000 : AT (0x40000)
 	{
 		_istack = .;
 	}
-	.ustack 0x8000 : AT (0x8000)
+	.ustack 0x3FF00 : AT (0x3FF00)
 	{
 		_ustack = .;
 	} > RAM
