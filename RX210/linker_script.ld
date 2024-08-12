@@ -87,7 +87,7 @@ SECTIONS
 	{
 		_ustack = .;
 	} > RAM
-	.istack 0x400: AT(0x100)
+	.istack 0x400: AT(0x400)
 	{
 		_istack = .;
 	} > RAM
