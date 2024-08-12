@@ -66,4 +66,3 @@ vm.o : ../mrubyc/src/vm.c
 xprintf.o : ../common/xprintf.c
 monitor.o : ../common/monitor.c
 e2flash.o : ../common/e2flash.c
-r_flash_api_rx.o : ../common/r_flash_api_rx.c
