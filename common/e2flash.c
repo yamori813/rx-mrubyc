@@ -429,7 +429,11 @@ int		ret = 0;
 	// 周辺クロック未通知
 	if (flagNotifyPeripheralClock == 0){
 		// 周辺クロック通知(MHz単位)
+#if defined(GRCITRUS)
+		FLASH.PCKAR.WORD = 48;
+#else
 		FLASH.PCKAR.WORD = 25;
+#endif
 // ハードウエアユーザースマニュアル r01uh0037jj0150-rx210.pdf の　1385 ページ参照
 
 		*pFlashAddr = 0xE9;
