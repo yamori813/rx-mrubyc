@@ -24,6 +24,7 @@ OBJS += start.o hwinit.o inthandler.o vects.o
 MRBCOBJ = alloc.o c_array.o c_hash.o c_math.o c_numeric.o c_object.o c_range.o c_string.o class.o console.o error.o global.o keyvalue.o load.o mrblib.o rrt0.o symbol.o value.o vm.o
 CROSS_CFLAGS += -std=c99 -I. -I../mrubyc/src
 #CROSS_CFLAGS += -DMRBC_NO_TIMER
+CROSS_CFLAGS += -DMRBC_USE_STRIN=1
 
 main.mot:	main.elf
 	$(CROSS_OBJCOPY) main.elf -O srec -I elf32-rx-be-ns $@
