@@ -70,7 +70,7 @@ int res;
 
 
 #if defined(GRCITRUS)
-	res = EraseE2Flash(E2_BASE_ADDR, 32 * 64);	// 32K
+	res = EraseE2Flash(E2_BASE_ADDR, 32 * 1024);	// 32K
 #else
 	res = EraseE2Flash(E2_BASE_ADDR, 128 * 64);	// 8K
 #endif
