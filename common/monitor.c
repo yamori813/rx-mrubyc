@@ -43,6 +43,8 @@ unsigned char ch;
 				runmrbc();
 				break;
 			default:
+				xprintf("x: download mrb by xmodem and write on e2 flash\r\n");
+				xprintf("r: run mrb on e2 flash\r\n");
 				break;
 		}
 	}
