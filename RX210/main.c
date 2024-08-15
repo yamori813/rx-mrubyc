@@ -86,7 +86,7 @@ int main (void)
 
 	xfunc_out=pchar;
 
-	xprintf("start\r\n");
+	xprintf("start on RX210\r\n");
 
 	mon();
 

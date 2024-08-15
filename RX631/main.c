@@ -74,7 +74,7 @@ int main(void) {
 	InitTimer();
 
 	// dorp 2 byte ?
-	xprintf("  start\r\n");
+	xprintf("  start on RX631\r\n");
 
 	PORTA.PDR.BIT.B0 = 1;
 	PORTA.PODR.BIT.B0 = 1;
