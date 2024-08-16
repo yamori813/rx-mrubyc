@@ -24,7 +24,10 @@ OBJS += usb_core.o usb_hal.o usb_cdc.o usbdescriptors.o util.o
 
 main.mot:	main.elf
 	$(CROSS_OBJCOPY) main.elf -O srec -I elf32-rx-be-ns $@
-	@cksum -o 3 $@ | awk '{printf "CRC-32 : %08X\n", $$1}'
+
+# only support FreeBSD
+sum:	main.mot
+	@cksum -o 3 main.mot | awk '{printf "CRC-32 : %08X\n", $$1}'
 
 include ../mrubyc.mk
 
@@ -42,5 +45,8 @@ clean:
 	rm -rf *.o *.elf *.mot
 
 xprintf.o : ../common/xprintf.c
+	$(CROSS_CC) $(CROSS_CFLAGS) -c $<
 monitor.o : ../common/monitor.c
+	$(CROSS_CC) $(CROSS_CFLAGS) -c $<
 e2flash.o : ../common/e2flash.c
+	$(CROSS_CC) $(CROSS_CFLAGS) -c $<
