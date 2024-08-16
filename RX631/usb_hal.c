@@ -210,11 +210,9 @@ static void SetDefaultInterrupts(void);
 /*Operations*/
 static void WriteControlINPacket(void);
 static void WriteBulkINPacket(void);
-extern void WriteBulkINPacket(void);
 static void WriteIntINPacket(void);
 static void ReadControlOUTPacket(void);
 static void ReadBulkOUTPacket(void);
-extern void ReadBulkOUTPacket(void);
 
 /*Interrupt Handlers*/
 static void HandleVBus(void);
@@ -1367,6 +1365,7 @@ End WriteIntINPacket function
 * Argument      : none
 * Return value  : none
 **********************************************************************/
+#if 0
 static void WriteBulkINPacket(void)
 {
     uint32_t Count = 0;
@@ -1484,6 +1483,7 @@ static void WriteBulkINPacket(void)
         USBIO.BRDYENB.BIT.PIPE2BRDYE = 1;
     }
 }
+#endif
 /**********************************************************************
 End WriteBulkINPacket function
 **********************************************************************/
@@ -2325,3 +2325,89 @@ void USBHALInterruptHandler(void)
 /**********************************************************************
 End USBHALInterruptHandler function
 **********************************************************************/
+
+#if 0
+void ReadBulkOUTPacket(void)
+{
+    uint16_t DataLength = 0;
+
+    /*Read data using D1FIFO*/
+    /*NOTE: This probably will have already been selected if using BRDY interrupt.*/
+    do{
+    USBIO.D1FIFOSEL.BIT.CURPIPE = PIPE_BULK_OUT;
+    }while(USBIO.D1FIFOSEL.BIT.CURPIPE != PIPE_BULK_OUT);
+
+    /*Set PID to BUF*/
+    USBIO.PIPE1CTR.BIT.PID = PID_BUF;
+
+    /*Wait for buffer to be ready*/
+    while(USBIO.D1FIFOCTR.BIT.FRDY == 0){;}
+
+    /*Set Read Count Mode - so DTLN count will decrement as data read from buffer*/
+    USBIO.D1FIFOSEL.BIT.RCNT = 1;
+
+    /*Read length of data */
+    DataLength = USBIO.D1FIFOCTR.BIT.DTLN;
+
+    if( DataLength == 0 ) {
+        USBIO.D1FIFOCTR.BIT.BCLR = 1;
+        return;
+    }
+
+    while(DataLength != 0){
+        /*Read from the FIFO*/
+        uint16_t Data = USBIO.D1FIFO;
+        if(DataLength >= 2){
+            /*Save first byte*/
+            Serial._store_char((uint8_t)Data);
+            /*Save second byte*/
+            Serial._store_char((uint8_t)(Data>>8));
+            DataLength-=2;
+        } else {
+            Serial._store_char((uint8_t)Data);
+            DataLength--;
+        }
+    }
+
+}
+#endif
+void WriteBulkINPacket(void)
+{
+    uint32_t Count = 0;
+
+    /*Write data to Bulk IN pipe using D0FIFO*/
+    /*Select pipe (Check this happens before continuing)*/
+    /*Set 8 bit access*/
+    USBIO.D0FIFOSEL.BIT.MBW = 0;
+    do{
+        USBIO.D0FIFOSEL.BIT.CURPIPE = PIPE_BULK_IN;
+    }while(USBIO.D0FIFOSEL.BIT.CURPIPE != PIPE_BULK_IN);
+
+
+    /*Wait for buffer to be ready*/
+    while(USBIO.D0FIFOCTR.BIT.FRDY == 0){;}
+
+    /* Write data to the IN Fifo until have written a full packet
+     or we have no more data to write */
+    while((Count < BULK_IN_PACKET_SIZE) && _buffer_available())
+    {
+        USBIO.D0FIFO = _extract_char();
+        Count++;
+    }
+
+    /*Send the packet */
+    /*Set PID to BUF*/
+    USBIO.PIPE2CTR.BIT.PID = PID_BUF;
+
+    /*If we have not written a full packets worth to the buffer then need to
+    signal that the buffer is now ready to be sent, set the buffer valid flag (BVAL).*/
+    if(Count != BULK_IN_PACKET_SIZE)
+    {
+        USBIO.D0FIFOCTR.BIT.BVAL = 1;
+    }
+
+    if(!_buffer_available())
+    {
+        USBIO.BRDYENB.BIT.PIPE2BRDYE = 0;
+    }
+}

@@ -29,6 +29,24 @@ int hal_flush(int fd)
 	return 0;
 }
 
+#define SERIAL_BUFFER_SIZE	64
+uint8_t _tx_buffer[SERIAL_BUFFER_SIZE];
+uint32_t _tx_buffer_head;
+uint32_t _tx_buffer_tail;
+
+unsigned char _extract_char()
+{
+    unsigned char c = _tx_buffer[_tx_buffer_tail];
+    if (_tx_buffer_head != _tx_buffer_tail) {
+      _tx_buffer_tail = (_tx_buffer_tail + 1) % SERIAL_BUFFER_SIZE;
+    }
+    return c;
+}
+bool _buffer_available()
+{
+    return (_tx_buffer_head != _tx_buffer_tail);
+}
+
 int gchar()
 {
 	uint8_t ch;
@@ -41,7 +59,12 @@ int gchar()
 void pchar(unsigned char);
 void pchar(unsigned char ch)
 {
-	USBCDC_PutChar(ch);
+//	USBCDC_PutChar(ch);
+	USB0.INTENB0.BIT.BRDYE = 0;
+	_tx_buffer[_tx_buffer_head] = ch;
+	_tx_buffer_head = (_tx_buffer_head + 1) % SERIAL_BUFFER_SIZE;
+	USB0.INTENB0.BIT.BRDYE = 1;
+	USB0.BRDYENB.BIT.PIPE2BRDYE = 1;
 }
 
 void c_sci5_init (mrb_vm * vm, mrb_value * v)
@@ -64,6 +87,10 @@ void c_sci5_write(mrb_vm * vm, mrb_value * v)
 }
 
 int main(void) {
+
+	_tx_buffer_head = 0;
+	_tx_buffer_tail = 0;
+
 
 	USBCDC_Init();
 
