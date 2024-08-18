@@ -3,7 +3,7 @@ RX210 and RX631 mruby/c port
 How to build on Linux and FreeBSD.
 
 You need download gcc_rx_4.8.4_2019q2.zip from Renesas site.
-And uncompres and run to install.
+And uncompress and run to install.
 
 ~/toolchains/gcc_4.8.4.201902_sp1_gnurx-elf/bin add PATH.
 
