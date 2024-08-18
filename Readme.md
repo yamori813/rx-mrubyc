@@ -16,3 +16,5 @@ $ make
 You get main.mot and flash it.
 
 RX210 serial speed is 38400. RX631 is any.
+
+MRB file upload by xmodem on serial connection.
