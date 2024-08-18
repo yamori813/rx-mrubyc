@@ -1,5 +1,7 @@
 RX210 and RX631 mruby/c port
 
+reference board is AE-RX210 and GR-CITRUS.
+
 How to build on Linux and FreeBSD.
 
 You need download gcc_rx_4.8.4_2019q2.zip from Renesas site.
