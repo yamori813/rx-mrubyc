@@ -1,5 +1,5 @@
 MRBCOBJ = alloc.o c_array.o c_hash.o c_math.o c_numeric.o c_object.o c_range.o c_string.o class.o console.o error.o global.o keyvalue.o load.o mrblib.o rrt0.o symbol.o value.o vm.o
-CROSS_CFLAGS += -std=c99 -I. -I../mrubyc/src
+CROSS_CFLAGS += -std=c99 -I. -I../mrubyc/src -DNDEBUG
 #CROSS_CFLAGS += -DMRBC_NO_TIMER
 CROSS_CFLAGS += -DMRBC_USE_STRING=1
 
