@@ -4,10 +4,9 @@
 
 character = 0
 
-serial_init()
+serial_init
 
-while true
-    character = serial_read()
-    serial_write(character)
+loop do
+  character = serial_read
+  serial_write(character)
 end
-

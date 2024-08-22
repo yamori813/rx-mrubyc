@@ -37,9 +37,9 @@ ary = []
   x = (x * 73) % 887
 end
 
-serial_init()
+serial_init
 
-while true
+loop do
   serial_write('@'.ord)
   1000.times do
     merge_sort(ary)
