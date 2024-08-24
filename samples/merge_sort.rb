@@ -1,4 +1,6 @@
+#
 # from mrubyc support_tools/benchmarks
+#
 
 def merge(a, b)
   result = []
