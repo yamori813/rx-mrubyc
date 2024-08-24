@@ -1,5 +1,5 @@
 #
-# mrbc -E -Bsample_serial_echo_server sample_serial_echo_server.rb
+# serial echo back test script
 #
 
 character = 0
