@@ -84,6 +84,7 @@ _PowerON_Reset :
     mvtc    #10000h, psw            /* Set Ubit & Ibit for PSW */
 
 /* change PSW PM to user-mode */
+/*
     MVFC   PSW,R1
     OR     #00100000h,R1
     PUSH.L R1
@@ -93,6 +94,7 @@ _PowerON_Reset :
     RTE
     NOP
     NOP
+*/
 #ifdef CPPAPP
     mov    #__rx_init,r7
     jsr    r7
