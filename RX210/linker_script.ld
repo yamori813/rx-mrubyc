@@ -83,6 +83,7 @@ SECTIONS
 		. = ALIGN(2);
 		_mdata = .;
 	} > ROM
+	/* user stack not use because of allways supervisor mode */
 	.ustack 0x200: AT(0x200)
 	{
 		_ustack = .;

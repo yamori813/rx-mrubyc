@@ -87,6 +87,7 @@ SECTIONS
 	{
 		_istack = .;
 	}
+	/* user stack not use because of allways supervisor mode */
 	.ustack 0x3FF00 : AT (0x3FF00)
 	{
 		_ustack = .;
