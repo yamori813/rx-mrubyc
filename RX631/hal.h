@@ -46,8 +46,11 @@ extern "C" {
 
 #ifndef MRBC_NO_TIMER
 #define hal_init()		((void)0)
-#define hal_enable_irq()	(__builtin_rx_clrpsw('I'))
-#define hal_disable_irq()	(__builtin_rx_setpsw('I'))
+// USB is stop on supervisor mode in this function Why ???
+//#define hal_enable_irq()	(__builtin_rx_clrpsw('I'))
+//#define hal_disable_irq()	(__builtin_rx_setpsw('I'))
+#define hal_enable_irq()	((void)0)
+#define hal_disable_irq()	((void)0)
 #define hal_idle_cpu()		(__builtin_rx_wait())
 
 #else // MRBC_NO_TIMER
